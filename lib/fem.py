@@ -1,50 +1,48 @@
 # Klassendefinitionen fuer den FEM-analogen Bastelkram
+import numpy as np
 
 class Node:
-    def __init__(self, nid , x , y , z=0):
-        self.nid = nid
-        self.x   = x
-        self.y   = y 
+    def __init__(self):
+        self.nid = 0
+        self.x   = 0.0
+        self.y   = 0.0
         self.z   = 0.0
+    def add (self, nid, x , y , z):
+        self.nid = nid
+        self.x = x
+        self.y = y
+        self.z = z
 
 class Element:
     def __init__(self, eid):
         self.eid = eid
-        self.n   = {}
+        self.n   = dict()
     
-
 class Model:
     def __init__(self):
-        self.n = {}
-        self.e = {}
+        self.n = dict()
+        self.e = dict()
 
-    def addNode(self,*args):
-        if len(args) == 3:
-            node = Node(args[0], args[1], args[2], 0.0)
-            self.n.update({ node.nid : node})
+    def node(self,nid,x,y,z):
+        if nid==0:
+            if len(self.n) == 0:
+                nid = 1
+            else:
+                maxnid = sorted(self.n)[len(self.n)-1]
+                nid=maxnid+1
 
-        elif len(args) == 4:
-            node = Node(args[0], args[1], args[2], args[3])
-            self.n.update({ node.nid : node})
-        else:
-            print ("Wrong node definition.")
+        node = Node()
+        node.add(nid, x,y,z)
+        self.n.update({node.nid:node})
+        return nid
 
-    def addElement(self,*args):
-        if len(args) == 1:
-            eid=args[0]
-            elem = Element(eid)
-            self.e.update({ elem.eid : elem})
-        else:
-            print ("Wrong Element definition.")
 
-    def addNodeToElem(self,eid,*args):
-        if len(args) < 1:
-            print ("No nodes defined to connect to Element")
-            return False
-        else:
-            for nid in args:
-                self.e[eid].n.update({nid:self.n[nid]})
-
+    def Element(self,eid):
+        if eid==0:
+            #eid = self.e.sorted()[len(self.e)]
+            x=1
+        print ("EID: " + str(eid))
+        return eid
 
     def dumpElements(self):
         for eid, elem in self.e.items():

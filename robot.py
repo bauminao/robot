@@ -1,33 +1,31 @@
 #!/usr/bin/env python
 
-import numpy
-from lib.fem import Model
-from lib.fem import Node
+import numpy as np
 
-from lib.magic import Magic
+from lib import fem
+from lib import magic
 
 
 def main():
-    robot = Model()
-    node=Node(1 , 0.0 , 0.0 )
+    robot = fem.Model()
 
-    robot.addNode(2, 10.0 , 5.0)
-    robot.addNode(4, 12.0 , 8.0)
-    robot.addNode(6, 14.0 , 10.0)
-    robot.addNode(8, 16.0 , 11.0)
-    robot.addNode(2, 18.0 , 15.0)
+    robot.node(0 , 10.0 , 5.0  , 0.0)
+    robot.node(4 , 12.0 , 8.0  , 0.0)
+    robot.node(6 , 14.0 , 10.0 , 0.0)
+    robot.node(0 , 16.0 , 11.0 , 0.0)
+    robot.node(2 , 18.0 , 15.0 , 0.0)
+    robot.node(6 , 10.0 , 10.0 , 0.0)
 
-    robot.addElement(1)
-
-    robot.addNodeToElem(1,8,2,6)
+    #robot.element(1)
+    #robot.element(0)
 
     robot.dumpNodes()
-    robot.dumpElements()
+    #robot.dumpElements()
 
-    run = Magic(robot)
+    #run = magic.Magic(robot)
 
-    vector = (1 , 1 , 0)
-    run.MoveNode(1,vector)
+    #vector = (1 , 1 , 0)
+    #run.MoveNode(1,vector)
     
 if __name__ == "__main__":
     main()
