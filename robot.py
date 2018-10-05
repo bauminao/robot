@@ -1,9 +1,8 @@
 #!/usr/bin/env python
-
-import numpy as np
-
 from lib import fem
 from lib import magic
+
+import numpy as np
 
 
 def main():
@@ -16,16 +15,18 @@ def main():
     robot.node(2 , 18.0 , 15.0 , 0.0)
     robot.node(6 , 10.0 , 10.0 , 0.0)
 
-    #robot.element(1)
-    #robot.element(0)
+    robot.element(0)
+    robot.element(0)
+    robot.element(3, 4)
+    robot.element(2, 1, 2)
 
     robot.dumpNodes()
-    #robot.dumpElements()
+    robot.dumpElements()
 
-    #run = magic.Magic(robot)
+    run = magic.Magic(robot)
 
-    #vector = (1 , 1 , 0)
-    #run.MoveNode(1,vector)
+    vector = np.array([ 1.0 , 0.0 , 0.0 ])
+    run.MoveNode(1,vector)
     
 if __name__ == "__main__":
     main()

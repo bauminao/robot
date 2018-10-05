@@ -1,12 +1,11 @@
 # Klassendefinitionen fuer den FEM-analogen Bastelkram
-import numpy as np
-
 class Node:
     def __init__(self):
         self.nid = 0
         self.x   = 0.0
         self.y   = 0.0
         self.z   = 0.0
+
     def add (self, nid, x , y , z):
         self.nid = nid
         self.x = x
@@ -14,9 +13,16 @@ class Node:
         self.z = z
 
 class Element:
-    def __init__(self, eid):
-        self.eid = eid
+    def __init__(self):
+        self.eid = 0
         self.n   = dict()
+
+    def add (self, eid):
+        self.eid = eid
+
+    def connect(self,node):
+        self.n.update({node.nid:node})
+
     
 class Model:
     def __init__(self):
@@ -36,12 +42,24 @@ class Model:
         self.n.update({node.nid:node})
         return nid
 
+    def checknode(self,nid):
+        return nid in self.n
 
-    def Element(self,eid):
+    def element(self,eid,*args):
         if eid==0:
-            #eid = self.e.sorted()[len(self.e)]
-            x=1
-        print ("EID: " + str(eid))
+            if len(self.e) == 0:
+                eid = 1
+            else:
+                maxeid = sorted(self.e)[len(self.e)-1]
+                eid=maxeid+1
+        elem = Element()
+        elem.add(eid)
+        self.e.update({elem.eid:elem})
+
+        for nid in args:
+            if self.checknode(nid):
+                node=self.n[nid]
+                elem.connect(node)
         return eid
 
     def dumpElements(self):
