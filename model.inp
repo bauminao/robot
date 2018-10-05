@@ -1,0 +1,6 @@
+*NODE, NSET=ALL
+  1 , 0.0  , 0.0 , 0.0
+  2 , 10.0 , 0.0 , 0.0
+
+*ELEMENT, ELSET=ALL
+  1 , 1 , 2

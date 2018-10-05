@@ -8,25 +8,26 @@ import numpy as np
 def main():
     robot = fem.Model()
 
-    robot.node(0 , 10.0 , 5.0  , 0.0)
-    robot.node(4 , 12.0 , 8.0  , 0.0)
-    robot.node(6 , 14.0 , 10.0 , 0.0)
-    robot.node(0 , 16.0 , 11.0 , 0.0)
-    robot.node(2 , 18.0 , 15.0 , 0.0)
-    robot.node(6 , 10.0 , 10.0 , 0.0)
 
-    robot.element(0)
-    robot.element(0)
-    robot.element(3, 4)
-    robot.element(2, 1, 2)
+    print ("")
+    robot.import_model("model.inp")
+    print ("")
+
+    #robot.node(6 , 10.0 , 10.0 , 0.0)
+    #robot.element(2, 1, 2)
 
     robot.dumpNodes()
+    print ("")
     robot.dumpElements()
+    print ("")
 
     run = magic.Magic(robot)
 
-    vector = np.array([ 1.0 , 0.0 , 0.0 ])
-    run.MoveNode(1,vector)
+    vector = np.array([ 5.0 , 5.0 , 0.0 ])
+    run.moveNode(1,vector)
+    run.moveElem(1,vector)
+
+    robot.dumpNodes()
     
 if __name__ == "__main__":
     main()

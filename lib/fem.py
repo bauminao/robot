@@ -1,4 +1,8 @@
 # Klassendefinitionen fuer den FEM-analogen Bastelkram
+
+import re
+import numpy as np
+
 class Node:
     def __init__(self):
         self.nid = 0
@@ -12,6 +16,14 @@ class Node:
         self.y = y
         self.z = z
 
+    def getxyz_np(self):
+        return np.array([self.x , self.y , self.z])
+
+    def setxyz_np(self, xyz):
+        self.x=xyz[0]
+        self.y=xyz[1]
+        self.z=xyz[2]
+    
 class Element:
     def __init__(self):
         self.eid = 0
@@ -28,6 +40,43 @@ class Model:
     def __init__(self):
         self.n = dict()
         self.e = dict()
+
+    def import_model(self,modelfile):
+        mode = "none"
+        data=[]
+        with open(modelfile,'r') as f:
+            for line in f:
+                # Strip empty lines.
+                if not re.match(r'^\s*$', line):
+                    data.append(line.replace("\n",""))
+        # Missing: Strip comment-lines.
+        for line in data:
+            if line.startswith('*'):
+                mode=self.eval_command(line.upper())
+                continue
+            if mode == "NODE":
+                strnid , strx , stry , strz = line.split(",")
+                self.node(int(strnid),float(strx),float(stry),float(strz))
+            if mode == "ELEMENT":
+                elem = line.split(",")
+                if len(elem) < 2 :
+                    print ("Wrong Element")
+                else:
+                    eid=int(elem[0])
+                    nodelist=[]
+                    for node in elem[1:]:
+                        nodelist.append(int(node))
+                    self.element(int(elem[0]), nodelist)
+
+    def eval_command(self,command):
+        if   command.split(",")[0] == "*NODE":
+            mode = "NODE"
+        elif command.split(",")[0] == "*ELEMENT":
+            mode = "ELEMENT"
+        else:
+            mode = "NONE"
+        return mode
+
 
     def node(self,nid,x,y,z):
         if nid==0:
@@ -56,6 +105,9 @@ class Model:
         elem.add(eid)
         self.e.update({elem.eid:elem})
 
+        if type(args[0]) is list:
+            args=args[0]
+
         for nid in args:
             if self.checknode(nid):
                 node=self.n[nid]
@@ -63,14 +115,14 @@ class Model:
         return eid
 
     def dumpElements(self):
-        for eid, elem in self.e.items():
+        for eid, elem in sorted(self.e.items()):
             print("EID: " + str(elem.eid) + " -- ", end='')
             for nid, node in elem.n.items():
                 print ("N" + str(nid) + " " , end='')
             print ('')
 
     def dumpNodes(self):
-        for nid, node in self.n.items():
+        for nid, node in sorted(self.n.items()):
             print ("NID: " + str(node.nid) + " -- (" + str(node.x) + " / " + str(node.y) + " / " + str(node.z) + " ) ")
 
 
