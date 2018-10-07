@@ -1,6 +1,6 @@
 import numpy as np
 
-class Magic():
+class Run():
     def __init__(self,model):
         self.model = model
         self.t     = 0.0

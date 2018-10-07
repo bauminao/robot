@@ -1,12 +1,14 @@
 #!/usr/bin/env python
-from lib import fem
-from lib import magic
+from lib import Fem
+from lib import Run
+from lib import Plot
 
 import numpy as np
 
 
 def main():
-    robot = fem.Model()
+    robot = Fem.Model()
+    gui = Plot.Plot(robot)
 
 
     print ("")
@@ -21,13 +23,22 @@ def main():
     robot.dumpElements()
     print ("")
 
-    run = magic.Magic(robot)
+    gui.plot_nodes()
+
+    run = Run.Run(robot)
 
     vector = np.array([ 5.0 , 5.0 , 0.0 ])
     run.moveNode(1,vector)
     run.moveElem(1,vector)
 
     robot.dumpNodes()
+    print ("")
+
+    gui.plot_nodes()
+
+    print ("")
+
+
     
 if __name__ == "__main__":
     main()
